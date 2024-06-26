@@ -1,0 +1,62 @@
+{% extends "navbar.html" %}
+{% block title_block %}Your Page Title{% endblock  %}
+
+{% block body_block %}
+
+{% if search %}
+    {% for user in result %}
+    <div class="row mb-3">
+        <div class="col-sm-2">
+            {% if user.user_profile.profile_pic %}
+            <img src="/media/{{ user.user_profile.profile_pic }}" width="75px" height="75px" class="rounded-circle">
+            {% else %}
+            <img src="/media/default.png" width="75px" height="75px" class="rounded-circle">
+            {% endif %}
+        </div>
+        <div class="col-sm-10">
+            <a href="{% url 'App_login:user' user.username %}">{{ user.username }}</a>
+            <br>
+            {{ user.user_profile.full_name }}
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+<div class="row">
+    <div class="col-sm-8">
+        {% for author in following_list %}
+            {% for post in author.following.post.all %}
+            <div class="post" style="border:1px solid #888888; margin-bottom: 20px;">
+                <div style="padding:10px">
+                    {% if post.author.user_profile.profile_pic %}
+                    <img src="/media/{{ post.author.user_profile.profile_pic }}" width="75px" height="75px" class="rounded-circle">
+                    {% else %}
+                    <img src="/media/default.png" width="75px" height="75px" class="rounded-circle">
+                    {% endif %}
+                    <a href="{% url 'App_login:user' post.author %}">{{ post.author }}</a>
+                </div>
+                <br>
+                <img src="/media/{{ post.image }}" width="100%">
+            </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <div class="col-sm-4">
+        <div class="row">
+            <div class="col-sm-4">
+                {% if user.user_profile.profile_pic %}
+                <img src="/media/{{ user.user_profile.profile_pic }}" width="75px" height="75px" class="rounded-circle">
+                {% else %}
+                <img src="/media/default.png" width="75px" height="75px" class="rounded-circle">
+                {% endif %}
+            </div>
+            <div class="col-sm-8">
+                {{ user.username }}
+                <br>
+                {{ user.user_profile.full_name }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
